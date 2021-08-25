@@ -8,19 +8,33 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 
+import java.util.Date;
+
 @RestController
 public class LogController {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @PostMapping("/log-file-service/{mac}")
+    @GetMapping("/")
+    public Mono<String> healthCheck(){
+        return Mono.just("I'm alive");
+    }
+
+    @GetMapping("/log-file-service/")
+    public Mono<String> endpointCheck(){
+        return Mono.just("I'm alive");
+    }
+
+    @PostMapping("/log-file-service/v1/{mac}")
     public Mono<String> logByMac(@PathVariable String mac, @RequestBody LogRequest logRequest){
-        if(!mac.equals(logRequest.getMac())){
+        if(logRequest.getPayload() == null | logRequest.getMac() == null | !mac.equals(logRequest.getMac())){
             return Mono.error(new ResponseStatusException(HttpStatus.FORBIDDEN));
         }
 
-        logger.info("{\"mac\":\"" + mac + "\", \"payload\":\"" + logRequest.getPayload() + "\"}");
-        return Mono.just("Hello from log controller;" + mac);
+        logger.info("{\"mac\":\"" + mac + "\", \"payload\":\"" + logRequest.getPayload() + "\", \"date\":\""
+                + new Date() + "\"}");
+
+        return Mono.just("OK");
     }
 
 }

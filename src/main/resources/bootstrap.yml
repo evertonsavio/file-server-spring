@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: log-file-service
+
+---
+spring:
+  profiles: prod
+  application:
+    name: log-file-service
