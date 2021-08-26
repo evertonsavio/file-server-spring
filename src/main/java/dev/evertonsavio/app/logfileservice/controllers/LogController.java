@@ -57,7 +57,7 @@ public class LogController {
         }
 
         logger.info(text);
-        String PATH = BASE_PATH + mac.replace(":", "");
+        String PATH = BASE_PATH + mac;
 
         File file = new File(PATH);
         FileWriter fr = null;
@@ -96,7 +96,7 @@ public class LogController {
     @GetMapping("/log-file-service/v1/file/{mac}")
     public Flux<LogResponseDto> getLogByMac(@PathVariable String mac){
 
-        Path ipPath = Paths.get("./logs/" + mac.replace(":", ""));
+        Path ipPath = Paths.get("./logs/" + mac);
 
         if(!Files.isWritable(ipPath)){
             return Flux.empty();
