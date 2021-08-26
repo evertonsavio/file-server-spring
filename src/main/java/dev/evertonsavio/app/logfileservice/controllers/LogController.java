@@ -38,6 +38,22 @@ public class LogController {
         return Mono.just("I'm alive");
     }
 
+    @GetMapping("/log-file-service/v1/list")
+    public Mono<String[]> listLogs(){
+
+        Path ipPath = Paths.get("./logs");
+
+        if(!Files.isWritable(ipPath)){
+            return Mono.empty();
+        }
+
+        File f = new File("./logs");
+        String[] listOfPaths = f.list();
+
+        return Mono.just(listOfPaths);
+
+    }
+
     @PostMapping("/log-file-service/v1/log/{mac}")
     public Mono<String> logByMac(@PathVariable String mac, @RequestBody LogRequest logRequest){
         if(logRequest.getPayload() == null | logRequest.getMac() == null | !mac.equals(logRequest.getMac())){
